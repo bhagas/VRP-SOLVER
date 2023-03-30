@@ -125,25 +125,30 @@ map.on('load', () => {
 
 
 $('#tambah').click(function() {
-    $('#tabelnya').append(`<tr><td><input type="text" class="lng form-control"></td><td><input type="text" class="lat form-control"></td><td><input type="text" class="brg form-control"></td></tr>`)
+    $('#tabelnya').append(`<tr><td><input type="text" class="lng form-control"></td><td><input type="text" class="lat form-control"></td><td><input type="text" class="volume form-control"></td><td><input type="text" class="berat form-control"></td></tr>`)
 })
 
 $('#selesaikan').click(async function() {
     var lng = $('.lng').map((_,el) => el.value).get();
     var lat = $('.lat').map((_,el) => el.value).get();
-    var brg = $('.brg').map((_,el) => el.value).get();
+    var volume = $('.volume').map((_,el) => el.value).get();
+    var berat = $('.berat').map((_,el) => el.value).get();
 
     let koordinat =[[Number($('#depot_long').val()), Number($('#depot_lat').val())]];
     let demands = [0];
     for (let i = 0; i < lng.length; i++) {
+        let total_berat = (berat[i] * 100) / Number($('#berat_max').val())
+        let total_volume = (volume[i] *100) / Number($('#volume_max').val())
+        let demand = Math.max(total_berat, total_volume);
+        console.log(demand);
        koordinat.push([Number(lng[i]), Number(lat[i])])
-        demands.push(Number(brg[i]))
+        demands.push(Number(demand))
     }
     let final = {
                 "locations": koordinat,
                 "depotIndex": 0,
                 "numVehicles": Number($('#jumlah_kendaraan').val()),
-                "vehicleCapacity": Number($('#beban_max').val()),
+                "vehicleCapacity": 100,
                 "demands":demands,
                 "computeTimeLimit": 1500,
                 "waktu_antar":Number($('#waktu_antar').val())
@@ -166,7 +171,8 @@ $("#map").on("click", "#jadikan_depot", function() {
     popop.remove();
 })
 $("#map").on("click", "#jadikan_tujuan", function() {
-    $('#tabelnya').append(`<tr><td><input type="text" class="lng form-control" value="${$( this ).attr("x")}"></td><td><input type="text" value="${$( this ).attr("y")}" class="lat form-control"></td><td><input type="text" class="brg form-control"></td>
+    $('#tabelnya').append(`<tr><td><input type="text" class="lng form-control" value="${$( this ).attr("x")}"></td><td><input type="text" value="${$( this ).attr("y")}" class="lat form-control"></td>
+    <td><input type="text" class="volume form-control"></td><td><input type="text" class="berat form-control"></td>
         <td><a href="#" class="DeleteButton">Hapus</a></td>
         </tr>`)
         popop.remove();

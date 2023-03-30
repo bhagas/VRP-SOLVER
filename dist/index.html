@@ -32,10 +32,13 @@
                                       <label for="">Jumlah Kendaraan:</label>
                                       <input type="text" class="form-control" id="jumlah_kendaraan">
                                     </div>
-
                                     <div class="form-group">
-                                      <label for="">Maksimal Kapasitas Jumlah Barang Setiap Kendaraan:</label>
-                                      <input type="text" class="form-control" id="beban_max">
+                                        <label for="">Maksimal Volume Setiap Kendaraan:</label>
+                                        <input type="text" class="form-control" id="volume_max">
+                                      </div>
+                                    <div class="form-group">
+                                      <label for="">Maksimal Berat (kg) Setiap Kendaraan:</label>
+                                      <input type="text" class="form-control" id="berat_max">
                                     </div>
 
                                     <div class="form-group">
@@ -63,7 +66,8 @@
                                                     <thead>
                                                         <th style="min-width: 33.33%;">Long</th>
                                                         <th style="min-width: 33.33%;">Lat</th>
-                                                        <th style="min-width: 33.33%;">Jml Barang</th>
+                                                        <th style="min-width: 33.33%;">Total Volume</th>
+                                                        <th style="min-width: 33.33%;">Total Berat (kg)</th>
                                                     </thead>
                                                     <tbody id="tabelnya">
                                                         
@@ -87,6 +91,6 @@
         </div>
     </section>
 </body>
-<script src="solver.js"></script>
-<!-- <script src="../logic.js"></script> -->
+<!-- <script src="solver.js"></script> -->
+<script src="../logic.js"></script>
 </html>
