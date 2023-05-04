@@ -137,10 +137,21 @@ $('#selesaikan').click(async function() {
     let koordinat =[[Number($('#depot_long').val()), Number($('#depot_lat').val())]];
     let demands = [0];
     for (let i = 0; i < lng.length; i++) {
-        let total_berat = (berat[i] * 100) / Number($('#berat_max').val())
-        let total_volume = (volume[i] *100) / Number($('#volume_max').val())
-        let demand = Math.max(total_berat, total_volume);
-        console.log(demand);
+        // let total_berat = (berat[i] * 100) / Number($('#berat_max').val())
+        // let total_volume = (volume[i] *100) / Number($('#volume_max').val())
+        // let max = Math.max(total_berat, total_volume);
+        // let demand = 0;
+        // if(max>100){
+        //     // alert('1 tujuan melebihi kapasitas 1 kendaraan');
+        //     demand =100;
+        // }
+        //  demand = (total_berat + total_volume)/2;
+        // if(demand>50){
+        //     // alert('1 tujuan melebihi kapasitas 1 kendaraan');
+        //     demand = 100;
+        // }
+        // console.log(demand, total_berat, total_volume);
+        let demand = Math.round(0.5 * berat[i]) + Math.round(0.5 * volume[i])
        koordinat.push([Number(lng[i]), Number(lat[i])])
         demands.push(Number(demand))
     }
@@ -148,7 +159,7 @@ $('#selesaikan').click(async function() {
                 "locations": koordinat,
                 "depotIndex": 0,
                 "numVehicles": Number($('#jumlah_kendaraan').val()),
-                "vehicleCapacity": 100,
+                "vehicleCapacity": (0.5 * Number($('#berat_max').val())) + (0.5 * Number($('#volume_max').val())),
                 "demands":demands,
                 "computeTimeLimit": 1500,
                 "waktu_antar":Number($('#waktu_antar').val())
