@@ -1,3 +1,4 @@
+$('#files').bind('change', handleDialog);
 let popop;
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmhhZ2FzIiwiYSI6ImNsZnNlaXRqNjA1ZDAzY2wydzhkNndpbWEifQ.7fH0v4wHwHD9n1dJFM8gXA';
 const map = new mapboxgl.Map({
@@ -125,7 +126,7 @@ map.on('load', () => {
 
 
 $('#tambah').click(function() {
-    $('#tabelnya').append(`<tr><td><input type="text" class="lng form-control"></td><td><input type="text" class="lat form-control"></td><td><input type="text" class="volume form-control"></td><td><input type="text" class="berat form-control"></td></tr>`)
+    $('#tabelnya').append(`<tr><td><input type="text" class="lng form-control"></td><td><input type="text" class="lat form-control"></td><td><input type="text" class="volume form-control"></td><td><input type="text" class="berat form-control"></td> <td><a href="#" class="DeleteButton">Hapus</a></td></tr>`)
 })
 
 $('#selesaikan').click(async function() {
@@ -161,7 +162,7 @@ $('#selesaikan').click(async function() {
                 "numVehicles": Number($('#jumlah_kendaraan').val()),
                 "vehicleCapacity": (0.5 * Number($('#berat_max').val())) + (0.5 * Number($('#volume_max').val())),
                 "demands":demands,
-                "computeTimeLimit": 1500,
+                "computeTimeLimit": 5000,
                 "waktu_antar":Number($('#waktu_antar').val())
             }
             // console.log(final);
@@ -193,3 +194,39 @@ $("#map").on("click", "#jadikan_tujuan", function() {
 $("#tabelnya").on("click", ".DeleteButton", function() {
 $(this).closest("tr").remove();
 });
+
+function handleDialog(event) {
+    var files = event.target.files;
+    var file = files[0];
+
+    var fileInfo = `
+      <span style="font-weight:bold;">${escape(file.name)}</span><br>
+      - FileType: ${file.type || 'n/a'}<br>
+      - FileSize: ${file.size} bytes<br>
+      - LastModified: ${file.lastModifiedDate ? file.lastModifiedDate.toLocaleDateString() : 'n/a'}
+    `;
+    // $('#file-info').append(fileInfo);
+    console.log(fileInfo);
+
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function(event){
+      var csv = event.target.result;
+      var data = $.csv.toObjects(csv);
+    //   $('#result').empty();
+    //   $('#result').html(JSON.stringify(data, null, 2));
+  
+    for (let i = 0; i < data.length; i++) {
+        data[i].Latitude = data[i].Latitude.replace(',','.');
+        data[i].Longitude = data[i].Longitude.replace(',','.');
+        data[i].KG = data[i].KG.replace(',','.');
+        data[i].M2 = data[i].M2.replace(',','.');
+        $('#tabelnya').append(`<tr><td><input type="text" class="lng form-control" value="${data[i].Latitude}"></td>
+        <td><input type="text" class="lat form-control" value="${data[i].Longitude}"></td>
+        <td><input type="text" class="volume form-control" value="${data[i].M2}"></td>
+        <td><input type="text" class="berat form-control" value="${data[i].KG}"></td>
+        <td><a href="#" class="DeleteButton">Hapus</a></td></tr>`)
+    }
+    console.log(data);
+    }
+  }
