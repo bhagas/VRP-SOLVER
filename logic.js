@@ -1,5 +1,6 @@
 $('#files').bind('change', handleDialog);
 let popop;
+let data_sj=[];
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmhhZ2FzIiwiYSI6ImNsZnNlaXRqNjA1ZDAzY2wydzhkNndpbWEifQ.7fH0v4wHwHD9n1dJFM8gXA';
 const map = new mapboxgl.Map({
 container: 'map', // container ID
@@ -167,8 +168,32 @@ $('#selesaikan').click(async function() {
             }
             // console.log(final);
   let data = await  axios.post('http://fosan.id:8854/selesaikan', final);
+//   console.log(data);
+  $('#isi_tabel').empty();
             if(data){
-           
+                
+                if(data_sj.length){
+                    let no =0;
+                    // console.log(data_sj, 'data_sj');
+                    for (let u = 0; u < data.data.result.routes.length; u++) {
+                        for (let x = 0; x < data.data.result.routes[u].length; x++) {
+                            // console.log(data.data.result.routes[u][x]);
+                            let inde=(data.data.result.routes[u][x]-1);
+                            $('#isi_tabel').append(  `      <tr>
+                            <td>${no++}</td>
+                            <td>${u+1}</td>
+                            <td>${data_sj[inde]['No SJ']}</td>
+                            <td>${data_sj[inde]['Nama Customer']}</td>
+                            <td>${data_sj[inde].M2}</td>
+                            <td>${data_sj[inde].KG}</td>
+                            <td>${x+1}</td>
+                        </tr>`)
+                            
+                        }
+                        
+                    }
+                  
+                }
                 map.getSource('route').setData(data.data.geojson);
             }
             
@@ -212,21 +237,21 @@ function handleDialog(event) {
     reader.readAsText(file);
     reader.onload = function(event){
       var csv = event.target.result;
-      var data = $.csv.toObjects(csv);
+       data_sj = $.csv.toObjects(csv);
     //   $('#result').empty();
     //   $('#result').html(JSON.stringify(data, null, 2));
   
-    for (let i = 0; i < data.length; i++) {
-        data[i].Latitude = data[i].Latitude.replace(',','.');
-        data[i].Longitude = data[i].Longitude.replace(',','.');
-        data[i].KG = data[i].KG.replace(',','.');
-        data[i].M2 = data[i].M2.replace(',','.');
-        $('#tabelnya').append(`<tr><td><input type="text" class="lng form-control" value="${data[i].Latitude}"></td>
-        <td><input type="text" class="lat form-control" value="${data[i].Longitude}"></td>
-        <td><input type="text" class="volume form-control" value="${data[i].M2}"></td>
-        <td><input type="text" class="berat form-control" value="${data[i].KG}"></td>
+    for (let i = 0; i < data_sj.length; i++) {
+        data_sj[i].Latitude = data_sj[i].Latitude.replace(',','.');
+        data_sj[i].Longitude = data_sj[i].Longitude.replace(',','.');
+        data_sj[i].KG = data_sj[i].KG.replace(',','.');
+        data_sj[i].M2 = data_sj[i].M2.replace(',','.');
+        $('#tabelnya').append(`<tr><td><input type="text" class="lng form-control" value="${data_sj[i].Latitude}"></td>
+        <td><input type="text" class="lat form-control" value="${data_sj[i].Longitude}"></td>
+        <td><input type="text" class="volume form-control" value="${data_sj[i].M2}"></td>
+        <td><input type="text" class="berat form-control" value="${data_sj[i].KG}"></td>
         <td><a href="#" class="DeleteButton">Hapus</a></td></tr>`)
     }
-    console.log(data);
+    console.log(data_sj);
     }
   }
